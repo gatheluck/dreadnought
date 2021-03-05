@@ -1,8 +1,11 @@
 import abc
 from dataclasses import dataclass
-from omegaconf import MISSING
 from typing import Optional
-from cleverhans.torch.attacks.projected_gradient_descent import projected_gradient_descent
+
+from cleverhans.torch.attacks.projected_gradient_descent import (  # type: ignore # noqa
+    projected_gradient_descent,
+)
+from omegaconf import MISSING
 
 
 @dataclass

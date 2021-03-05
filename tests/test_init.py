@@ -1,19 +1,23 @@
 import numpy as np
-import dreadnought
+from cleverhans.torch.attacks.projected_gradient_descent import (
+    projected_gradient_descent,
+)
 from hydra.utils import instantiate
 
-from cleverhans.torch.attacks.projected_gradient_descent import projected_gradient_descent
+import dreadnought
 
 
 class TestPgd:
-    def test__standard(self, pretrained_cifar10_resnet50, normalize_cifar10_loader, devices):
+    def test__standard(
+        self, pretrained_cifar10_resnet50, normalize_cifar10_loader, devices
+    ):
         config = dreadnought.PgdConfig
         config.eps = 8.0
         config.nb_iter = 10
         config.eps_iter = config.eps / config.nb_iter
         config.targeted = False
         config.rand_int = True
-        norms = {np.inf, 2.}
+        norms = {np.inf, 2.0}
 
         for norm in norms:
             for device in devices:
