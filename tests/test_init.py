@@ -4,6 +4,27 @@ from hydra.utils import instantiate
 import dreadnought
 
 
+class TestFgsm:
+    def test__standard(
+        self, pretrained_cifar10_resnet50, normalize_cifar10_loader, devices
+    ):
+        config = dreadnought.FgsmConfig
+        config.eps = 8.0
+        config.targeted = False
+        config.rand_init = True
+        norms = {np.inf, 1, 2}
+
+        for norm in norms:
+            for device in devices:
+                model = pretrained_cifar10_resnet50.to(device)
+                for x, t in normalize_cifar10_loader:
+                    x, t = x.to(device), t.to(device)
+                    x_adv = instantiate(config, model_fn=model, x=x, y=t, norm=norm)
+
+                    assert not x.equal(x_adv)
+                    break
+
+
 class TestPgd:
     def test__standard(
         self, pretrained_cifar10_resnet50, normalize_cifar10_loader, devices
