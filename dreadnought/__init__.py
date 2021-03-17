@@ -1,7 +1,9 @@
 import abc
 from dataclasses import dataclass
-from typing import Optional
+from typing import NamedTuple, Optional
+from enum import Enum
 
+import cleverhans.torch.attacks.fast_gradient_method  # type: ignore # noqa
 import cleverhans.torch.attacks.projected_gradient_descent  # type: ignore # noqa
 from omegaconf import MISSING
 
@@ -9,6 +11,14 @@ from omegaconf import MISSING
 @dataclass
 class AttackerConfig(abc.ABC):
     _target_: str = MISSING
+
+
+@dataclass
+class FgsmConfig(AttackerConfig):
+    _target_: str = "cleverhans.torch.attacks.fast_gradient_method.fast_gradient_method"
+    eps: float = MISSING
+    norm: str = MISSING
+    targeted: bool = MISSING
 
 
 @dataclass
@@ -20,3 +30,13 @@ class PgdConfig(AttackerConfig):
     norm: str = MISSING
     targeted: bool = MISSING
     rand_init: bool = MISSING
+
+
+class Attacker(NamedTuple):
+    name: str
+    config: AttackerConfig
+
+
+class ATTACKERS(Attacker, Enum):
+    FGSM = Attacker("fgsm", FgsmConfig)
+    PGD = Attacker("pgd", PgdConfig)
