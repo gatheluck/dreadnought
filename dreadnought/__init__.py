@@ -1,7 +1,7 @@
 import abc
 from dataclasses import dataclass
-from typing import NamedTuple, Optional
 from enum import Enum
+from typing import NamedTuple, Optional, cast
 
 import cleverhans.torch.attacks.fast_gradient_method  # type: ignore # noqa
 import cleverhans.torch.attacks.projected_gradient_descent  # type: ignore # noqa
@@ -23,7 +23,9 @@ class FgsmConfig(AttackerConfig):
 
 @dataclass
 class PgdConfig(AttackerConfig):
-    _target_: str = "cleverhans.torch.attacks.projected_gradient_descent.projected_gradient_descent"
+    _target_: str = (
+        "cleverhans.torch.attacks.projected_gradient_descent.projected_gradient_descent"
+    )
     eps: float = MISSING
     eps_iter: Optional[float] = None
     nb_iter: int = MISSING
@@ -38,5 +40,5 @@ class Attacker(NamedTuple):
 
 
 class ATTACKERS(Attacker, Enum):
-    FGSM = Attacker("fgsm", FgsmConfig)
-    PGD = Attacker("pgd", PgdConfig)
+    FGSM = Attacker("fgsm", cast(FgsmConfig, AttackerConfig))
+    PGD = Attacker("pgd", cast(PgdConfig, AttackerConfig))
