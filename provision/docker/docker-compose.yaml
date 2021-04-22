@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  core:
+    build:
+      context: ../../
+      dockerfile: provision/docker/Dockerfile
+      shm_size: '30G'
+    ports:
+      - 9000:8000
+    volumes:
+      - datadir:/var/data
+      - outputdir:/var/output
+
+volumes:
+  datadir:
+    driver_opts:
+      type: none
+      device: ${HOST_DATADIR}
+      o: bind
+  outputdir:
+    driver_opts:
+      type: none
+      device: ${HOST_OUTPUTDIR}
+      o: bind
