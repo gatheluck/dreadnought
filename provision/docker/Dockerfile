@@ -11,3 +11,5 @@ RUN git clone https://github.com/gatheluck/dreadnought.git
 
 WORKDIR ${SCRATCH_DIRECTORY}/dreadnought
 RUN poetry install
+RUN ln -s /var/data data
+RUN mkdir output && ln -s /var/output output
